@@ -16,29 +16,34 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    let color = 'rgba(255, 205, 210, 0.3)'; // РЕШЕНИЕ ПРОБЛЕМЫ "КВАДРАТИКОВ": Бледное закрашенное сердечко для будущего
+    // ЦВЕТА И ПРОЗРАЧНОСТЬ ДЛЯ ЧЕТКОГО РАЗЛИЧИЯ
+    const pastColor = '#ef5350'; // Яркий красный для прошлого
+    const futureColor = 'rgba(239, 83, 80, 0.15)'; // Очень бледный, прозрачный красный для будущего
+    const todayColor = '#ff1744'; // Самый яркий для сегодня
+    
+    let color = futureColor; // По умолчанию - будущее
     let scale = '1';
 
     if (i < dayOfYear) {
-      color = '#ef5350'; // past
+      color = pastColor; // past
     } else if (i === dayOfYear) {
-      color = '#ff1744'; // today
+      color = todayColor; // today
       scale = '1.3'; // Увеличение сегодняшнего дня
     }
     
     hearts.push(
       <div key={i} style={{ 
         color, 
-        width: '56px',  // УВЕЛИЧЕННЫЙ РАЗМЕР СЕРДЕЧКА (было ~40px)
-        height: '56px', // УВЕЛИЧЕННЫЙ РАЗМЕР СЕРДЕЧКА
+        width: '56px',
+        height: '56px',
         display: 'flex', 
-        fontSize: '48px', // УВЕЛИЧЕННЫЙ ШРИФТ ДЛЯ БОЛЬШЕГО СЕРДЕЧКА
+        fontSize: '48px', 
         justifyContent: 'center', 
         alignItems: 'center',
         transform: `scale(${scale})`,
-        margin: '3px'   // Чуть больше отступа для растягивания
+        margin: '3px'
       }}>
-        ♥ {/* ВСЕГДА ИСПОЛЬЗУЕМ ЗАПОЛНЕННОЕ СЕРДЕЧКО, ЧТОБЫ IPHONE НЕ ПОКАЗЫВАЛ КВАДРАТЫ */}
+        ♥ {/* ВСЕГДА ЗАПОЛНЕННОЕ СЕРДЕЧКО ДЛЯ ИСПРАВЛЕНИЯ "КВАДРАТИКОВ" */}
       </div>
     );
   }
@@ -51,17 +56,16 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', // var(--bg)
+        backgroundColor: '#ffebee', 
         paddingTop: '380px', // Отступ под часы iPhone
-        paddingBottom: '80px',
         fontFamily: 'sans-serif'
       }}>
-        {/* СЕТКА: 15 в ряд, но теперь шире (930px), чтобы большие сердечки влезли */}
+        {/* СЕТКА: 15 в ряд, широкая */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          width: '930px',  // УВЕЛИЧЕННАЯ ШИРИНА СЕТКИ (15 шт * 62px)
+          width: '930px',
           marginBottom: '50px' 
         }}>
           {hearts}
@@ -72,7 +76,7 @@ export default function handler() {
           display: 'flex', 
           fontSize: '32px', 
           fontWeight: '600', 
-          color: '#ad1457', // var(--text)
+          color: '#ad1457',
           marginTop: 'auto', // Опускает текст максимально вниз
           paddingBottom: '80px' // Отступ от самого низа экрана
         }}>
