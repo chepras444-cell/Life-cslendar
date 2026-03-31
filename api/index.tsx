@@ -1,9 +1,8 @@
 import { ImageResponse } from '@vercel/og';
-import { NextRequest } from 'next/server';
 
 export const config = { runtime: 'edge' };
 
-export default function handler(req: NextRequest) {
+export default function handler() {
   const now = new Date();
   const year = now.getFullYear();
   const daysInYear = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
