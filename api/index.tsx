@@ -16,22 +16,22 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    const pastColor = '#ef5350'; // Яркий красный для прошлого
-    const futureColor = '#ffffff'; // РЕШЕНИЕ ПРОБЛЕМЫ "БЛЕДНОСТИ": Чистый белый для будущего
-    const todayColor = '#ff1744'; // Самый яркий для сегодня
+    const pastColor = '#ff1744'; // Ярко-красный для прошлого
+    const futureColor = '#ffffff'; // Чистый белый для будущего
+    const todayColor = '#ffff00'; // Желтый для "сегодня", чтобы выделить в массе
     
-    let color = futureColor; // По умолчанию - будущее
+    let color = futureColor;
     let scale = '1';
-    let shadow = 'none'; // Тень только для белых сердечек
+    let opacity = '1';
 
     if (i < dayOfYear) {
-      color = pastColor; // past
+      color = pastColor;
     } else if (i === dayOfYear) {
-      color = todayColor; // today
-      scale = '1.3'; // Увеличение сегодняшнего дня
+      color = todayColor;
+      scale = '1.4';
     } else {
-      // КРОШЕЧНАЯ ТЕНЬ ДЛЯ БЕЛЫХ СЕРДЕЧЕК, ЧТОБЫ ОНИ НЕ СЛИВАЛИСЬ С РОЗОВЫМ ФОНОМ
-      shadow = '0px 1px 2px rgba(0, 0, 0, 0.05)'; 
+      // Будущие белые сделаем чуть-чуть прозрачными, чтобы сетка читалась
+      opacity = '0.9';
     }
     
     hearts.push(
@@ -45,9 +45,9 @@ export default function handler() {
         alignItems: 'center',
         transform: `scale(${scale})`,
         margin: '3px',
-        textShadow: shadow // ТЕНЬ ДЛЯ ЧЕТКОГО ОЧЕРТАНИЯ БЕЛЫХ СЕРДЕЧЕК
+        opacity
       }}>
-        ♥ {/* ВСЕГДА ЗАПОЛНЕННОЕ СЕРДЕЧКО ДЛЯ ИСПРАВЛЕНИЯ "КВАДРАТИКОВ" */}
+        ♥
       </div>
     );
   }
@@ -60,11 +60,11 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', 
-        paddingTop: '380px', // Отступ под часы iPhone
+        // СДЕЛАЛ ФОН ТЕМНЕЕ, чтобы белый был виден
+        backgroundColor: '#f06292', 
+        paddingTop: '380px',
         fontFamily: 'sans-serif'
       }}>
-        {/* СЕТКА: 15 в ряд, широкая */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
@@ -75,19 +75,16 @@ export default function handler() {
           {hearts}
         </div>
 
-        {/* ФУТЕР (Текст внизу) */}
         <div style={{ 
           display: 'flex', 
-          fontSize: '32px', 
-          fontWeight: '600', 
-          color: '#ad1457',
-          marginTop: 'auto', // Опускает текст максимально вниз
-          paddingBottom: '80px' // Отступ от самого низа экрана
+          fontSize: '34px', 
+          fontWeight: 'bold', 
+          color: '#ffffff', // Текст теперь тоже белый для стиля
+          marginTop: 'auto',
+          paddingBottom: '80px'
         }}>
-          <span style={{ color: '#ff1744', fontWeight: 'bold', marginRight: '15px' }}>
-            {left} дн. осталось
-          </span> 
-          <span style={{ opacity: 0.8 }}>• {percent}% года</span>
+          <span style={{ marginRight: '15px' }}>{left} дн. осталось</span> 
+          <span>• {percent}% года</span>
         </div>
       </div>
     ),
