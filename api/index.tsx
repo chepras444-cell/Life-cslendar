@@ -20,17 +20,16 @@ export default function handler() {
     const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
     const symbol = i <= dayOfYear ? '♥' : '♡';
     
-    // ОГРОМНЫЙ РАЗМЕР (40x40 пикселей) И ПЛОТНОЕ РАСПОЛОЖЕНИЕ
     hearts.push(
       <div key={i} style={{ 
         color, 
-        width: '40px', 
-        height: '40px', 
+        width: '40px',   // Ширина одного элемента
+        height: '40px',  // Высота одного элемента
         display: 'flex', 
-        fontSize: '34px', // Шрифт чуть меньше блока для аккуратности
+        fontSize: '34px', 
         justifyContent: 'center', 
         alignItems: 'center',
-        margin: '1px' // Крошечный отступ между сердечками
+        margin: '4px 2px' // 4px сверху/снизу для растягивания по ВЫСОТЕ
       }}>
         {symbol}
       </div>
@@ -46,29 +45,27 @@ export default function handler() {
         flexDirection: 'column', 
         alignItems: 'center', 
         backgroundColor: '#ffebee', 
-        paddingTop: '350px', // Отступ под часы
-        paddingBottom: '100px' 
+        paddingTop: '350px', 
+        paddingBottom: '80px' 
       }}>
-        {/* СЕТКА СЕРДЕЧЕК: Огромная, плотная, на весь экран */}
+        {/* КОНТЕЙНЕР: Ширина 660px гарантирует ровно 15 сердечек в ряд */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          // Увеличил ширину сетки до 950px, чтобы огромные сердечки плотно заполнили экран
-          width: '950px', 
-          marginBottom: '50px' 
+          width: '660px', 
+          marginBottom: '40px' 
         }}>
           {hearts}
         </div>
 
-        {/* НИЖНИЙ ТЕКСТ: Как на референсе */}
         <div style={{ 
           display: 'flex', 
           fontSize: '30px', 
           fontWeight: 'bold', 
           color: '#ad1457',
-          marginTop: 'auto', // Опускаем текст максимально вниз
-          paddingBottom: '20px'
+          marginTop: 'auto',
+          paddingBottom: '40px'
         }}>
           <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span>
           <span> • {percent}% года</span>
