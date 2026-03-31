@@ -18,7 +18,7 @@ export default function handler() {
   for (let i = 0; i < daysInYear; i++) {
     const colorPast = '#ef5350'; 
     const colorToday = '#ff1744';
-    const colorFutureContour = '#ffcdd2'; // Нежный розовый контур для будущего
+    const colorFutureContour = '#ffcdd2'; // Контур для будущего
 
     if (i < dayOfYear) {
       // ПРОШЛОЕ: Закрашенное красное сердечко
@@ -35,10 +35,10 @@ export default function handler() {
         </div>
       );
     } else {
-      // БУДУЩЕЕ: Контурное сердечко через SVG (100% стабильность)
+      // БУДУЩЕЕ: Контурное сердечко через SVG
       hearts.push(
         <div key={i} style={{ width: '50px', height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '4px' }}>
-          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke={colorFutureContour} strokeWidth="2">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke={colorFutureContour} strokeWidth="1.5">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
         </div>
@@ -54,11 +54,14 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', 
-        paddingTop: '380px',
+        backgroundColor: '#ffebee', // var(--bg)
+        // ОТСТУП СВЕРХУ ПОД ЧАСЫ (380px -> 600px)
+        // Увеличил отступ, чтобы опустить сетку ниже цифровых часов
+        paddingTop: '600px', 
+        paddingBottom: '80px',
         fontFamily: 'sans-serif'
       }}>
-        {/* СЕТКА: Ровно 15 в ряд благодаря ширине 900px */}
+        {/* СЕТКА */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
@@ -76,16 +79,13 @@ export default function handler() {
           fontWeight: 'bold', 
           color: '#ad1457',
           marginTop: 'auto',
-          paddingBottom: '100px'
+          paddingBottom: '80px'
         }}>
           <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span> 
           <span>• {percent}% года</span>
         </div>
       </div>
     ),
-    { 
-      width: 1170, 
-      height: 2532 
-    }
+    { width: 1170, height: 2532 }
   );
 }
