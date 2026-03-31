@@ -1,0 +1,12 @@
+{
+  "name": "life-calendar-og",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel"
+  },
+  "dependencies": {
+    "@vercel/og": "latest",
+    "react": "latest"
+  }
+}
