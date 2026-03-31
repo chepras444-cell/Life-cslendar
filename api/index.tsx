@@ -6,7 +6,6 @@ export const config = { runtime: 'edge' };
 export default function handler() {
   const now = new Date();
   const year = now.getFullYear();
-  
   const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
   const daysInYear = isLeap ? 366 : 365;
   
@@ -17,19 +16,30 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
-    const symbol = i <= dayOfYear ? '♥' : '♡';
+    let color = '#ffcdd2'; // future
+    let symbol = '♡';
+    let scale = '1';
+
+    if (i < dayOfYear) {
+      color = '#ef5350'; // past
+      symbol = '♥';
+    } else if (i === dayOfYear) {
+      color = '#ff1744'; // today
+      symbol = '♥';
+      scale = '1.3'; // Увеличение сегодняшнего дня, как в твоем стиле
+    }
     
     hearts.push(
       <div key={i} style={{ 
         color, 
-        width: '40px',   // Ширина одного элемента
-        height: '40px',  // Высота одного элемента
+        width: '42px', 
+        height: '42px', 
         display: 'flex', 
-        fontSize: '34px', 
+        fontSize: '32px', 
         justifyContent: 'center', 
         alignItems: 'center',
-        margin: '4px 2px' // 4px сверху/снизу для растягивания по ВЫСОТЕ
+        transform: `scale(${scale})`,
+        margin: '2px' 
       }}>
         {symbol}
       </div>
@@ -44,31 +54,35 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', 
-        paddingTop: '350px', 
-        paddingBottom: '80px' 
+        backgroundColor: '#ffebee', // var(--bg)
+        paddingTop: '380px', // Отступ под часы iPhone
+        paddingBottom: '100px',
+        fontFamily: 'sans-serif'
       }}>
-        {/* КОНТЕЙНЕР: Ширина 660px гарантирует ровно 15 сердечек в ряд */}
+        {/* СЕТКА: ровно 15 в ряд за счет ширины 690px (15 элементов по 46px) */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          width: '660px', 
-          marginBottom: '40px' 
+          width: '690px', 
+          marginBottom: '50px' 
         }}>
           {hearts}
         </div>
 
+        {/* ФУТЕР (Текст внизу) */}
         <div style={{ 
           display: 'flex', 
-          fontSize: '30px', 
-          fontWeight: 'bold', 
-          color: '#ad1457',
+          fontSize: '32px', 
+          fontWeight: '600', 
+          color: '#ad1457', // var(--text)
           marginTop: 'auto',
-          paddingBottom: '40px'
+          paddingBottom: '60px'
         }}>
-          <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span>
-          <span> • {percent}% года</span>
+          <span style={{ color: '#ff1744', fontWeight: 'bold', marginRight: '15px' }}>
+            {left} дн. осталось
+          </span> 
+          <span style={{ opacity: 0.8 }}>• {percent}% года</span>
         </div>
       </div>
     ),
