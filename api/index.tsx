@@ -54,11 +54,11 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', // var(--bg)
-        // ОТСТУП СВЕРХУ ПОД ЧАСЫ (380px -> 600px)
-        // Увеличил отступ, чтобы опустить сетку ниже цифровых часов
-        paddingTop: '600px', 
-        paddingBottom: '80px',
+        backgroundColor: '#ffebee', // var(--bg) - Светлый фон
+        // ОТСТУП СВЕРХУ ПОД ЧАСЫ (600px -> 800px)
+        // Увеличил отступ еще больше, чтобы опустить сетку гарантированно под время
+        paddingTop: '800px', 
+        paddingBottom: '100px', // Уменьшил paddingBottom, так как paddingTop стал больше
         fontFamily: 'sans-serif'
       }}>
         {/* СЕТКА */}
