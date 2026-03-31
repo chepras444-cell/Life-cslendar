@@ -16,19 +16,22 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    // ЦВЕТА И ПРОЗРАЧНОСТЬ ДЛЯ ЧЕТКОГО РАЗЛИЧИЯ
     const pastColor = '#ef5350'; // Яркий красный для прошлого
-    const futureColor = 'rgba(239, 83, 80, 0.15)'; // Очень бледный, прозрачный красный для будущего
+    const futureColor = '#ffffff'; // РЕШЕНИЕ ПРОБЛЕМЫ "БЛЕДНОСТИ": Чистый белый для будущего
     const todayColor = '#ff1744'; // Самый яркий для сегодня
     
     let color = futureColor; // По умолчанию - будущее
     let scale = '1';
+    let shadow = 'none'; // Тень только для белых сердечек
 
     if (i < dayOfYear) {
       color = pastColor; // past
     } else if (i === dayOfYear) {
       color = todayColor; // today
       scale = '1.3'; // Увеличение сегодняшнего дня
+    } else {
+      // КРОШЕЧНАЯ ТЕНЬ ДЛЯ БЕЛЫХ СЕРДЕЧЕК, ЧТОБЫ ОНИ НЕ СЛИВАЛИСЬ С РОЗОВЫМ ФОНОМ
+      shadow = '0px 1px 2px rgba(0, 0, 0, 0.05)'; 
     }
     
     hearts.push(
@@ -41,7 +44,8 @@ export default function handler() {
         justifyContent: 'center', 
         alignItems: 'center',
         transform: `scale(${scale})`,
-        margin: '3px'
+        margin: '3px',
+        textShadow: shadow // ТЕНЬ ДЛЯ ЧЕТКОГО ОЧЕРТАНИЯ БЕЛЫХ СЕРДЕЧЕК
       }}>
         ♥ {/* ВСЕГДА ЗАПОЛНЕННОЕ СЕРДЕЧКО ДЛЯ ИСПРАВЛЕНИЯ "КВАДРАТИКОВ" */}
       </div>
