@@ -5,10 +5,12 @@ export const config = { runtime: 'edge' };
 
 export default function handler(req: NextRequest) {
   const now = new Date();
-  const daysInYear = (now.getFullYear() % 4 === 0) ? 366 : 365;
-  const start = new Date(now.getFullYear(), 0, 1);
+  const year = now.getFullYear();
+  const daysInYear = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
+  const start = new Date(year, 0, 1);
   const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86400000);
   const left = daysInYear - dayOfYear - 1;
+  const percent = Math.floor((dayOfYear / daysInYear) * 100);
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
@@ -39,8 +41,8 @@ export default function handler(req: NextRequest) {
           {hearts}
         </div>
         <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ad1457', display: 'flex' }}>
-          <span style={{ color: '#ff1744', marginRight: '10px' }}>{left} дней осталось</span>
-          <span> • {Math.floor((dayOfYear / daysInYear) * 100)}% года</span>
+          <span style={{ color: '#ff1744', marginRight: '10px' }}>{left} дн. осталось</span>
+          <span> • {percent}% года</span>
         </div>
       </div>
     ),
