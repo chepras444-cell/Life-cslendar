@@ -7,7 +7,6 @@ export default function handler() {
   const now = new Date();
   const year = now.getFullYear();
   
-  // Проверка на високосный год для точности
   const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
   const daysInYear = isLeap ? 366 : 365;
   
@@ -21,16 +20,17 @@ export default function handler() {
     const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
     const symbol = i <= dayOfYear ? '♥' : '♡';
     
-    // Каждое сердечко в блоке 26x26 пикселей
+    // ОГРОМНЫЙ РАЗМЕР (40x40 пикселей) И ПЛОТНОЕ РАСПОЛОЖЕНИЕ
     hearts.push(
       <div key={i} style={{ 
         color, 
-        width: '26px', 
-        height: '26px', 
+        width: '40px', 
+        height: '40px', 
         display: 'flex', 
-        fontSize: '20px', 
+        fontSize: '34px', // Шрифт чуть меньше блока для аккуратности
         justifyContent: 'center', 
-        alignItems: 'center' 
+        alignItems: 'center',
+        margin: '1px' // Крошечный отступ между сердечками
       }}>
         {symbol}
       </div>
@@ -46,30 +46,29 @@ export default function handler() {
         flexDirection: 'column', 
         alignItems: 'center', 
         backgroundColor: '#ffebee', 
-        // ОТСТУП СВЕРХУ ПОД ЧАСЫ (350px)
-        paddingTop: '350px', 
+        paddingTop: '350px', // Отступ под часы
         paddingBottom: '100px' 
       }}>
-        {/* СЕТКА СЕРДЕЧЕК */}
+        {/* СЕТКА СЕРДЕЧЕК: Огромная, плотная, на весь экран */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          // ШИРИНА ПОД 15 СЕРДЕЧЕК (15 * 26px = 390px)
-          width: '390px', 
+          // Увеличил ширину сетки до 950px, чтобы огромные сердечки плотно заполнили экран
+          width: '950px', 
           marginBottom: '50px' 
         }}>
           {hearts}
         </div>
 
-        {/* НИЖНИЙ ТЕКСТ */}
+        {/* НИЖНИЙ ТЕКСТ: Как на референсе */}
         <div style={{ 
           display: 'flex', 
-          fontSize: '32px', 
+          fontSize: '30px', 
           fontWeight: 'bold', 
           color: '#ad1457',
-          // ОТСТУП ДО ТЕКСТА, ЧТОБЫ ОН БЫЛ НАД ДОКОМ
-          marginTop: '150px'
+          marginTop: 'auto', // Опускаем текст максимально вниз
+          paddingBottom: '20px'
         }}>
           <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span>
           <span> • {percent}% года</span>
