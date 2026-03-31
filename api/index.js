@@ -11,19 +11,12 @@ export default function () {
   const left = daysInYear - dayOfYear - 1;
   const percent = Math.floor((dayOfYear / daysInYear) * 100);
 
-  // Генерируем массив сердечек
-  const hearts = Array.from({ length: daysInYear }, (_, i) => {
+  // Создаем строку с сердечками заранее
+  const heartsArray = Array.from({ length: daysInYear }, (_, i) => {
     const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
     const symbol = i <= dayOfYear ? '♥' : '♡';
     return (
-      <div key={i} style={{ 
-        color, 
-        width: '21px', 
-        height: '21px', 
-        display: 'flex', 
-        fontSize: '16px', 
-        justifyContent: 'center' 
-      }}>
+      <div key={i} style={{ color: color, width: '22px', height: '22px', display: 'flex', fontSize: '16px', justifyContent: 'center' }}>
         {symbol}
       </div>
     );
@@ -32,32 +25,15 @@ export default function () {
   return new ImageResponse(
     (
       <div style={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#ffebee',
-        padding: '20px'
+        height: '100%', width: '100%', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffebee', padding: '40px'
       }}>
-        <div style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          justifyContent: 'center', 
-          width: '950px' 
-        }}>
-          {hearts}
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '1000px', marginBottom: '50px' }}>
+          {heartsArray}
         </div>
-        <div style={{ 
-          display: 'flex', 
-          fontSize: '40px', 
-          fontWeight: 'bold', 
-          color: '#ad1457', 
-          marginTop: '40px' 
-        }}>
+        <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: '#ad1457' }}>
           <span style={{ color: '#ff1744', marginRight: '20px' }}>{left} дн. осталось</span>
-          <span>• {percent}% года</span>
+          <span> • {percent}% года</span>
         </div>
       </div>
     ),
