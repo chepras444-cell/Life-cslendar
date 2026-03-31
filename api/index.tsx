@@ -16,23 +16,26 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    // НАСТРОЙКИ ЦВЕТОВ
-    const pastColor = '#ef5350';   // Насыщенный красный (прошлое)
-    const todayColor = '#ff1744';  // Яркий красный (сегодня)
-    const futureColor = '#ffffff'; // Чистый белый (будущее)
-    
-    let color = futureColor;
+    // ЦВЕТА И СТИЛИ
+    const colorPast = '#ef5350';   // Прошлое - Насыщенный красный
+    const colorToday = '#ff1744';  // Сегодня - Яркий красный
+    const colorFutureContour = '#ffcdd2'; // Будущее - Бледный розовый контур
+
+    let color = colorPast;
     let scale = '1';
-    let border = 'none';
+    let textStroke = 'none'; // По умолчанию - без обводки
 
     if (i < dayOfYear) {
-      color = pastColor;
+      color = colorPast; // past
     } else if (i === dayOfYear) {
-      color = todayColor;
+      color = colorToday; // today
       scale = '1.4';
     } else {
-      // Добавляем тонкую розовую обводку белым сердечкам, чтобы они были видны
-      border = '1px solid #ffcdd2';
+      // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: ДЕЛАЕМ СЕРДЕЧКО КОНТУРНЫМ (пустым) ЧЕРЕЗ CSS
+      color = 'transparent'; // Делаем само сердечко прозрачным
+      // Добавляем тонкий контурный бордюр (text-stroke)
+      // Мы используем стиль, который гарантированно работает на iOS (Webkit)
+      textStroke = `1px ${colorFutureContour}`; 
     }
     
     hearts.push(
@@ -46,10 +49,11 @@ export default function handler() {
         alignItems: 'center',
         transform: `scale(${scale})`,
         margin: '4px',
-        // Тень для белых сердечек, чтобы они "горели" на фоне
-        textShadow: i > dayOfYear ? '0 0 2px rgba(173, 20, 87, 0.2)' : 'none'
+        // Применяем Webkit text-stroke для контура
+        WebkitTextStroke: textStroke, 
+        textStroke: textStroke // На всякий случай для других браузеров
       }}>
-        ♥
+        ♥ {/* ВСЕГДА ЗАПОЛНЕННОЕ СЕРДЕЧКО ДЛЯ ИСПРАВЛЕНИЯ "КВАДРАТИКОВ" */}
       </div>
     );
   }
@@ -62,8 +66,8 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', // Возвращаем приятный светлый фон
-        paddingTop: '380px',
+        backgroundColor: '#ffebee', // var(--bg) - Вернули светлый фон
+        paddingTop: '380px', // Отступ под часы iPhone
         fontFamily: 'sans-serif'
       }}>
         {/* СЕТКА */}
@@ -77,7 +81,7 @@ export default function handler() {
           {hearts}
         </div>
 
-        {/* ТЕКСТ */}
+        {/* ФУТЕР (Текст внизу) */}
         <div style={{ 
           display: 'flex', 
           fontSize: '34px', 
