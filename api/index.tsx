@@ -16,32 +16,29 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    let color = '#ffcdd2'; // future
-    let symbol = '♡';
+    let color = 'rgba(255, 205, 210, 0.3)'; // РЕШЕНИЕ ПРОБЛЕМЫ "КВАДРАТИКОВ": Бледное закрашенное сердечко для будущего
     let scale = '1';
 
     if (i < dayOfYear) {
       color = '#ef5350'; // past
-      symbol = '♥';
     } else if (i === dayOfYear) {
       color = '#ff1744'; // today
-      symbol = '♥';
-      scale = '1.3'; // Увеличение сегодняшнего дня, как в твоем стиле
+      scale = '1.3'; // Увеличение сегодняшнего дня
     }
     
     hearts.push(
       <div key={i} style={{ 
         color, 
-        width: '42px', 
-        height: '42px', 
+        width: '56px',  // УВЕЛИЧЕННЫЙ РАЗМЕР СЕРДЕЧКА (было ~40px)
+        height: '56px', // УВЕЛИЧЕННЫЙ РАЗМЕР СЕРДЕЧКА
         display: 'flex', 
-        fontSize: '32px', 
+        fontSize: '48px', // УВЕЛИЧЕННЫЙ ШРИФТ ДЛЯ БОЛЬШЕГО СЕРДЕЧКА
         justifyContent: 'center', 
         alignItems: 'center',
         transform: `scale(${scale})`,
-        margin: '2px' 
+        margin: '3px'   // Чуть больше отступа для растягивания
       }}>
-        {symbol}
+        ♥ {/* ВСЕГДА ИСПОЛЬЗУЕМ ЗАПОЛНЕННОЕ СЕРДЕЧКО, ЧТОБЫ IPHONE НЕ ПОКАЗЫВАЛ КВАДРАТЫ */}
       </div>
     );
   }
@@ -56,15 +53,15 @@ export default function handler() {
         alignItems: 'center', 
         backgroundColor: '#ffebee', // var(--bg)
         paddingTop: '380px', // Отступ под часы iPhone
-        paddingBottom: '100px',
+        paddingBottom: '80px',
         fontFamily: 'sans-serif'
       }}>
-        {/* СЕТКА: ровно 15 в ряд за счет ширины 690px (15 элементов по 46px) */}
+        {/* СЕТКА: 15 в ряд, но теперь шире (930px), чтобы большие сердечки влезли */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          width: '690px', 
+          width: '930px',  // УВЕЛИЧЕННАЯ ШИРИНА СЕТКИ (15 шт * 62px)
           marginBottom: '50px' 
         }}>
           {hearts}
@@ -76,8 +73,8 @@ export default function handler() {
           fontSize: '32px', 
           fontWeight: '600', 
           color: '#ad1457', // var(--text)
-          marginTop: 'auto',
-          paddingBottom: '60px'
+          marginTop: 'auto', // Опускает текст максимально вниз
+          paddingBottom: '80px' // Отступ от самого низа экрана
         }}>
           <span style={{ color: '#ff1744', fontWeight: 'bold', marginRight: '15px' }}>
             {left} дн. осталось
