@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "@vercel/og": "latest"
+    "@vercel/og": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
   }
 }
