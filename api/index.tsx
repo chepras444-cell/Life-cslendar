@@ -16,13 +16,14 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    const pastColor = '#ff1744'; // Ярко-красный для прошлого
-    const futureColor = '#ffffff'; // Чистый белый для будущего
-    const todayColor = '#ffff00'; // Желтый для "сегодня", чтобы выделить в массе
+    // НАСТРОЙКИ ЦВЕТОВ
+    const pastColor = '#ef5350';   // Насыщенный красный (прошлое)
+    const todayColor = '#ff1744';  // Яркий красный (сегодня)
+    const futureColor = '#ffffff'; // Чистый белый (будущее)
     
     let color = futureColor;
     let scale = '1';
-    let opacity = '1';
+    let border = 'none';
 
     if (i < dayOfYear) {
       color = pastColor;
@@ -30,22 +31,23 @@ export default function handler() {
       color = todayColor;
       scale = '1.4';
     } else {
-      // Будущие белые сделаем чуть-чуть прозрачными, чтобы сетка читалась
-      opacity = '0.9';
+      // Добавляем тонкую розовую обводку белым сердечкам, чтобы они были видны
+      border = '1px solid #ffcdd2';
     }
     
     hearts.push(
       <div key={i} style={{ 
         color, 
-        width: '56px',
-        height: '56px',
+        width: '50px',
+        height: '50px',
         display: 'flex', 
-        fontSize: '48px', 
+        fontSize: '42px', 
         justifyContent: 'center', 
         alignItems: 'center',
         transform: `scale(${scale})`,
-        margin: '3px',
-        opacity
+        margin: '4px',
+        // Тень для белых сердечек, чтобы они "горели" на фоне
+        textShadow: i > dayOfYear ? '0 0 2px rgba(173, 20, 87, 0.2)' : 'none'
       }}>
         ♥
       </div>
@@ -60,37 +62,35 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        // СДЕЛАЛ ФОН ТЕМНЕЕ, чтобы белый был виден
-        backgroundColor: '#f06292', 
+        backgroundColor: '#ffebee', // Возвращаем приятный светлый фон
         paddingTop: '380px',
         fontFamily: 'sans-serif'
       }}>
+        {/* СЕТКА */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          width: '930px',
+          width: '900px',
           marginBottom: '50px' 
         }}>
           {hearts}
         </div>
 
+        {/* ТЕКСТ */}
         <div style={{ 
           display: 'flex', 
           fontSize: '34px', 
           fontWeight: 'bold', 
-          color: '#ffffff', // Текст теперь тоже белый для стиля
+          color: '#ad1457',
           marginTop: 'auto',
-          paddingBottom: '80px'
+          paddingBottom: '100px'
         }}>
-          <span style={{ marginRight: '15px' }}>{left} дн. осталось</span> 
+          <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span> 
           <span>• {percent}% года</span>
         </div>
       </div>
     ),
-    { 
-      width: 1170, 
-      height: 2532 
-    }
+    { width: 1170, height: 2532 }
   );
 }
