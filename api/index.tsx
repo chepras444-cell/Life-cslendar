@@ -6,7 +6,8 @@ export const config = { runtime: 'edge' };
 export default function handler() {
   const now = new Date();
   const year = now.getFullYear();
-  // Проверка на високосный год
+  
+  // Проверка на високосный год для точности
   const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
   const daysInYear = isLeap ? 366 : 365;
   
@@ -17,26 +18,19 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    let color = '#ffcdd2'; // Будущее
-    let symbol = '♡';
+    const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
+    const symbol = i <= dayOfYear ? '♥' : '♡';
     
-    if (i < dayOfYear) {
-      color = '#ef5350'; // Прошлое
-      symbol = '♥';
-    } else if (i === dayOfYear) {
-      color = '#ff1744'; // Сегодня
-      symbol = '♥';
-    }
-    
+    // Каждое сердечко в блоке 26x26 пикселей
     hearts.push(
-      <div key={i} style={{
-        color: color,
-        width: '24px',
-        height: '24px',
-        display: 'flex',
-        fontSize: '18px',
-        justifyContent: 'center',
-        alignItems: 'center'
+      <div key={i} style={{ 
+        color, 
+        width: '26px', 
+        height: '26px', 
+        display: 'flex', 
+        fontSize: '20px', 
+        justifyContent: 'center', 
+        alignItems: 'center' 
       }}>
         {symbol}
       </div>
@@ -45,35 +39,39 @@ export default function handler() {
 
   return new ImageResponse(
     (
-      <div style={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#ffebee',
-        padding: '50px'
+      <div style={{ 
+        height: '100%', 
+        width: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        backgroundColor: '#ffebee', 
+        // ОТСТУП СВЕРХУ ПОД ЧАСЫ (350px)
+        paddingTop: '350px', 
+        paddingBottom: '100px' 
       }}>
-        {/* Контейнер для сердечек с ПЕРЕНОСОМ (wrap) */}
+        {/* СЕТКА СЕРДЕЧЕК */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          width: '1000px', 
-          marginBottom: '60px' 
+          // ШИРИНА ПОД 15 СЕРДЕЧЕК (15 * 26px = 390px)
+          width: '390px', 
+          marginBottom: '50px' 
         }}>
           {hearts}
         </div>
 
-        {/* Текст под сердечками */}
+        {/* НИЖНИЙ ТЕКСТ */}
         <div style={{ 
           display: 'flex', 
-          fontSize: '45px', 
+          fontSize: '32px', 
           fontWeight: 'bold', 
-          color: '#ad1457' 
+          color: '#ad1457',
+          // ОТСТУП ДО ТЕКСТА, ЧТОБЫ ОН БЫЛ НАД ДОКОМ
+          marginTop: '150px'
         }}>
-          <span style={{ color: '#ff1744', marginRight: '20px' }}>{left} дн. осталось</span>
+          <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span>
           <span> • {percent}% года</span>
         </div>
       </div>
