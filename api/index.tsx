@@ -6,8 +6,10 @@ export const config = { runtime: 'edge' };
 export default function handler() {
   const now = new Date();
   const year = now.getFullYear();
+  // Проверка на високосный год
   const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
   const daysInYear = isLeap ? 366 : 365;
+  
   const start = new Date(year, 0, 1);
   const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86400000);
   const left = daysInYear - dayOfYear - 1;
@@ -15,16 +17,26 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
-    const symbol = i <= dayOfYear ? '♥' : '♡';
+    let color = '#ffcdd2'; // Будущее
+    let symbol = '♡';
+    
+    if (i < dayOfYear) {
+      color = '#ef5350'; // Прошлое
+      symbol = '♥';
+    } else if (i === dayOfYear) {
+      color = '#ff1744'; // Сегодня
+      symbol = '♥';
+    }
+    
     hearts.push(
-      <div key={i} style={{ 
-        color, 
-        width: '30px', 
-        height: '30px', 
-        display: 'flex', 
-        fontSize: '22px', 
-        justifyContent: 'center' 
+      <div key={i} style={{
+        color: color,
+        width: '24px',
+        height: '24px',
+        display: 'flex',
+        fontSize: '18px',
+        justifyContent: 'center',
+        alignItems: 'center'
       }}>
         {symbol}
       </div>
@@ -41,36 +53,34 @@ export default function handler() {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#ffebee',
-        padding: '20px'
+        padding: '50px'
       }}>
-        {/* Контейнер сердечек сделан узким (650px), чтобы они уходили вниз */}
+        {/* Контейнер для сердечек с ПЕРЕНОСОМ (wrap) */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           justifyContent: 'center', 
-          width: '650px', 
-          marginBottom: '80px' 
+          width: '1000px', 
+          marginBottom: '60px' 
         }}>
           {hearts}
         </div>
 
-        {/* Текст теперь тоже вертикальный */}
+        {/* Текст под сердечками */}
         <div style={{ 
           display: 'flex', 
-          flexDirection: 'column',
-          alignItems: 'center',
+          fontSize: '45px', 
           fontWeight: 'bold', 
           color: '#ad1457' 
         }}>
-          <div style={{ fontSize: '60px', color: '#ff1744', marginBottom: '10px' }}>
-            {left} дн. осталось
-          </div>
-          <div style={{ fontSize: '40px', opacity: 0.8 }}>
-            {percent}% года
-          </div>
+          <span style={{ color: '#ff1744', marginRight: '20px' }}>{left} дн. осталось</span>
+          <span> • {percent}% года</span>
         </div>
       </div>
     ),
-    { width: 1170, height: 2532 }
+    { 
+      width: 1170, 
+      height: 2532 
+    }
   );
 }
