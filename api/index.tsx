@@ -1,71 +1,80 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Life Calendar</title>
-    <style>
-        :root {
-            --bg: #ffebee;
-            --past: #ef5350;
-            --future: #ffcdd2;
-            --today: #ff1744;
-            --text: #ad1457;
-        }
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: var(--bg); overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            font-family: -apple-system, system-ui, sans-serif;
-        }
-        .container { width: 90%; text-align: center; padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
-        .grid { display: grid; grid-template-columns: repeat(15, 1fr); gap: 7px; margin-bottom: 30px; }
-        .h { font-size: 16px; line-height: 1; display: flex; justify-content: center; }
-        .past { color: var(--past); }
-        .future { color: var(--future); }
-        .today { color: var(--today); transform: scale(1.3); }
-        .footer { font-size: 16px; font-weight: 600; color: var(--text); opacity: 0.8; }
-        .footer b { color: var(--today); }
-    </style>
-</head>
-<body>
-    <div id="app" class="container">
-        <div class="grid" id="g"></div>
-        <div class="footer" id="s"></div>
-    </div>
+import { ImageResponse } from '@vercel/og';
+import React from 'react';
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+export const config = { runtime: 'edge' };
+
+export default function handler() {
+  const now = new Date();
+  const year = now.getFullYear();
+  
+  const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
+  const daysInYear = isLeap ? 366 : 365;
+  
+  const start = new Date(year, 0, 1);
+  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86400000);
+  const left = daysInYear - dayOfYear - 1;
+  const percent = Math.floor((dayOfYear / daysInYear) * 100);
+
+  const hearts = [];
+  for (let i = 0; i < daysInYear; i++) {
+    const color = i < dayOfYear ? '#ef5350' : (i === dayOfYear ? '#ff1744' : '#ffcdd2');
+    const symbol = i <= dayOfYear ? '♥' : '♡';
     
-    <script>
-        const now = new Date();
-        const year = now.getFullYear();
-        const start = new Date(year, 0, 1);
-        const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-        const daysInYear = ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 366 : 365;
+    hearts.push(
+      <div key={i} style={{ 
+        color, 
+        width: '40px',   // Ширина одного элемента
+        height: '40px',  // Высота одного элемента
+        display: 'flex', 
+        fontSize: '34px', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        margin: '4px 2px' // 4px сверху/снизу для растягивания по ВЫСОТЕ
+      }}>
+        {symbol}
+      </div>
+    );
+  }
 
-        // Рисуем сетку
-        const g = document.getElementById('g');
-        let h = '';
-        for (let i = 0; i < daysInYear; i++) {
-            if (i < dayOfYear) h += '<div class="h past">♥</div>';
-            else if (i === dayOfYear) h += '<div class="h today">♥</div>';
-            else h += '<div class="h future">♡</div>';
-        }
-        g.innerHTML = h;
+  return new ImageResponse(
+    (
+      <div style={{ 
+        height: '100%', 
+        width: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        backgroundColor: '#ffebee', 
+        paddingTop: '350px', 
+        paddingBottom: '80px' 
+      }}>
+        {/* КОНТЕЙНЕР: Ширина 660px гарантирует ровно 15 сердечек в ряд */}
+        <div style={{ 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          justifyContent: 'center', 
+          width: '660px', 
+          marginBottom: '40px' 
+        }}>
+          {hearts}
+        </div>
 
-        const left = daysInYear - dayOfYear - 1;
-        document.getElementById('s').innerHTML = `<b>${left} дн. осталось</b> • ${Math.floor((dayOfYear/daysInYear)*100)}% года`;
-
-        // ГЛАВНАЯ ПРАВКА: Если есть ?height, превращаем страницу в картинку и ПЕРЕНАПРАВЛЯЕМ на неё
-        if (window.location.search.includes('height')) {
-            setTimeout(() => {
-                html2canvas(document.body, { backgroundColor: '#ffebee', scale: 3 }).then(canvas => {
-                    const dataUrl = canvas.toDataURL('image/png');
-                    // Редирект на саму картинку. Это заставит Команды iOS увидеть ФАЙЛ.
-                    window.location.replace(dataUrl);
-                });
-            }, 100); // Мини-пауза для отрисовки
-        }
-    </script>
-</body>
-</html>
+        <div style={{ 
+          display: 'flex', 
+          fontSize: '30px', 
+          fontWeight: 'bold', 
+          color: '#ad1457',
+          marginTop: 'auto',
+          paddingBottom: '40px'
+        }}>
+          <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span>
+          <span> • {percent}% года</span>
+        </div>
+      </div>
+    ),
+    { 
+      width: 1170, 
+      height: 2532 
+    }
+  );
+}
