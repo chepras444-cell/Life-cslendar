@@ -1,88 +1,49 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 
-export const config = {
-  runtime: 'edge',
-};
+export const config = { runtime: 'edge' };
 
 export default function handler(req: NextRequest) {
   const now = new Date();
-  const year = now.getFullYear();
-  const start = new Date(year, 0, 1);
-  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-  const daysInYear = ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 366 : 365;
-  
+  const daysInYear = (now.getFullYear() % 4 === 0) ? 366 : 365;
+  const start = new Date(now.getFullYear(), 0, 1);
+  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86400000);
   const left = daysInYear - dayOfYear - 1;
-  const percent = Math.floor((dayOfYear / daysInYear) * 100);
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    let color = '#ffcdd2'; // Будущее: розовый контур
-    let content = '♡';
-    
-    if (i < dayOfYear) {
-      color = '#ef5350'; // Прошлое: красные закрашенные
-      content = '♥';
-    } else if (i === dayOfYear) {
-      color = '#ff1744'; // Сегодня: яркий закрашенный
-      content = '♥';
-    }
+    let color = '#ffcdd2';
+    if (i < dayOfYear) color = '#ef5350';
+    else if (i === dayOfYear) color = '#ff1744';
     
     hearts.push(
       <div key={i} style={{
         color: color,
-        fontSize: '14px',
-        width: '22px',
-        height: '22px',
+        width: '21px',
+        height: '21px',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: '2px',
-        marginBottom: '2px'
-      }}>
-        {content}
-      </div>
+        fontSize: '16px',
+        justifyContent: 'center'
+      }}>{i <= dayOfYear ? '♥' : '♡'}</div>
     );
   }
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          backgroundColor: '#ffebee', // Нежно-розовый фон
-          paddingBottom: '80px',
-        }}
-      >
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          width: '90%',
-          justifyContent: 'center',
-          marginBottom: '30px',
-        }}>
+      <div style={{
+        height: '100%', width: '100%', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'flex-end', backgroundColor: '#ffebee',
+        paddingBottom: '100px'
+      }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '90%', marginBottom: '30px' }}>
           {hearts}
         </div>
-        
-        <div style={{
-          fontSize: '20px',
-          fontWeight: 'bold',
-          color: '#ad1457',
-          display: 'flex',
-        }}>
-          <span style={{ color: '#ff1744', marginRight: '8px' }}>{left} дн. осталось</span>
-          <span> • {percent}% года позади</span>
+        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ad1457', display: 'flex' }}>
+          <span style={{ color: '#ff1744', marginRight: '10px' }}>{left} дней осталось</span>
+          <span> • {Math.floor((dayOfYear / daysInYear) * 100)}% года</span>
         </div>
       </div>
     ),
-    {
-      width: 430, // Размер под экран iPhone 15/16 Pro
-      height: 932,
-    },
+    { width: 1170, height: 2532 }
   );
 }
