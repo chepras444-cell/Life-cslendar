@@ -16,46 +16,34 @@ export default function handler() {
 
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    // ЦВЕТА И СТИЛИ
-    const colorPast = '#ef5350';   // Прошлое - Насыщенный красный
-    const colorToday = '#ff1744';  // Сегодня - Яркий красный
-    const colorFutureContour = '#ffcdd2'; // Будущее - Бледный розовый контур
-
-    let color = colorPast;
-    let scale = '1';
-    let textStroke = 'none'; // По умолчанию - без обводки
+    const colorPast = '#ef5350'; 
+    const colorToday = '#ff1744';
+    const colorFutureContour = '#ffcdd2'; // Нежный розовый контур для будущего
 
     if (i < dayOfYear) {
-      color = colorPast; // past
+      // ПРОШЛОЕ: Закрашенное красное сердечко
+      hearts.push(
+        <div key={i} style={{ color: colorPast, width: '50px', height: '50px', display: 'flex', fontSize: '42px', justifyContent: 'center', alignItems: 'center', margin: '4px' }}>
+          ♥
+        </div>
+      );
     } else if (i === dayOfYear) {
-      color = colorToday; // today
-      scale = '1.4';
+      // СЕГОДНЯ: Увеличенное красное сердечко
+      hearts.push(
+        <div key={i} style={{ color: colorToday, width: '50px', height: '50px', display: 'flex', fontSize: '42px', justifyContent: 'center', alignItems: 'center', margin: '4px', transform: 'scale(1.4)' }}>
+          ♥
+        </div>
+      );
     } else {
-      // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: ДЕЛАЕМ СЕРДЕЧКО КОНТУРНЫМ (пустым) ЧЕРЕЗ CSS
-      color = 'transparent'; // Делаем само сердечко прозрачным
-      // Добавляем тонкий контурный бордюр (text-stroke)
-      // Мы используем стиль, который гарантированно работает на iOS (Webkit)
-      textStroke = `1px ${colorFutureContour}`; 
+      // БУДУЩЕЕ: Контурное сердечко через SVG (100% стабильность)
+      hearts.push(
+        <div key={i} style={{ width: '50px', height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '4px' }}>
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke={colorFutureContour} strokeWidth="2">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </div>
+      );
     }
-    
-    hearts.push(
-      <div key={i} style={{ 
-        color, 
-        width: '50px',
-        height: '50px',
-        display: 'flex', 
-        fontSize: '42px', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        transform: `scale(${scale})`,
-        margin: '4px',
-        // Применяем Webkit text-stroke для контура
-        WebkitTextStroke: textStroke, 
-        textStroke: textStroke // На всякий случай для других браузеров
-      }}>
-        ♥ {/* ВСЕГДА ЗАПОЛНЕННОЕ СЕРДЕЧКО ДЛЯ ИСПРАВЛЕНИЯ "КВАДРАТИКОВ" */}
-      </div>
-    );
   }
 
   return new ImageResponse(
@@ -66,11 +54,11 @@ export default function handler() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
-        backgroundColor: '#ffebee', // var(--bg) - Вернули светлый фон
-        paddingTop: '380px', // Отступ под часы iPhone
+        backgroundColor: '#ffebee', 
+        paddingTop: '380px',
         fontFamily: 'sans-serif'
       }}>
-        {/* СЕТКА */}
+        {/* СЕТКА: Ровно 15 в ряд благодаря ширине 900px */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
@@ -81,7 +69,7 @@ export default function handler() {
           {hearts}
         </div>
 
-        {/* ФУТЕР (Текст внизу) */}
+        {/* НИЖНИЙ ТЕКСТ */}
         <div style={{ 
           display: 'flex', 
           fontSize: '34px', 
@@ -95,6 +83,9 @@ export default function handler() {
         </div>
       </div>
     ),
-    { width: 1170, height: 2532 }
+    { 
+      width: 1170, 
+      height: 2532 
+    }
   );
 }
