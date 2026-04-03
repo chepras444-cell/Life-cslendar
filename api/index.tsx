@@ -14,76 +14,43 @@ export default function handler() {
   const left = daysInYear - dayOfYear - 1;
   const percent = Math.floor((dayOfYear / daysInYear) * 100);
 
+  const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
+
+  // Генерируем массив стилей заранее, чтобы не нагружать рендер
   const hearts = [];
   for (let i = 0; i < daysInYear; i++) {
-    const colorPast = '#ef5350'; 
-    const colorToday = '#ff1744';
-    const colorFutureContour = '#ffcdd2'; // Контур для будущего
+    let fill = i < dayOfYear ? '#ef5350' : 'none';
+    let stroke = i >= dayOfYear ? '#ffcdd2' : 'none';
+    let scale = i === dayOfYear ? 1.3 : 1;
+    if (i === dayOfYear) fill = '#ff1744';
 
-    if (i < dayOfYear) {
-      // ПРОШЛОЕ: Закрашенное красное сердечко
-      hearts.push(
-        <div key={i} style={{ color: colorPast, width: '50px', height: '50px', display: 'flex', fontSize: '42px', justifyContent: 'center', alignItems: 'center', margin: '4px' }}>
-          ♥
-        </div>
-      );
-    } else if (i === dayOfYear) {
-      // СЕГОДНЯ: Увеличенное красное сердечко
-      hearts.push(
-        <div key={i} style={{ color: colorToday, width: '50px', height: '50px', display: 'flex', fontSize: '42px', justifyContent: 'center', alignItems: 'center', margin: '4px', transform: 'scale(1.4)' }}>
-          ♥
-        </div>
-      );
-    } else {
-      // БУДУЩЕЕ: Контурное сердечко через SVG
-      hearts.push(
-        <div key={i} style={{ width: '50px', height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '4px' }}>
-          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke={colorFutureContour} strokeWidth="1.5">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-          </svg>
-        </div>
-      );
-    }
+    hearts.push({ fill, stroke, scale });
   }
 
   return new ImageResponse(
     (
       <div style={{ 
-        height: '100%', 
-        width: '100%', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        backgroundColor: '#ffebee', // var(--bg) - Светлый фон
-        // ОТСТУП СВЕРХУ ПОД ЧАСЫ (600px -> 800px)
-        // Увеличил отступ еще больше, чтобы опустить сетку гарантированно под время
-        paddingTop: '800px', 
-        paddingBottom: '100px', // Уменьшил paddingBottom, так как paddingTop стал больше
-        fontFamily: 'sans-serif'
+        height: '100%', width: '100%', display: 'flex', flexDirection: 'column', 
+        alignItems: 'center', backgroundColor: '#ffebee', paddingTop: '800px' 
       }}>
-        {/* СЕТКА */}
-        <div style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          justifyContent: 'center', 
-          width: '900px',
-          marginBottom: '50px' 
-        }}>
-          {hearts}
+        {/* ОДИН КОНТЕЙНЕР ДЛЯ ВСЕХ СЕРДЕЧЕК */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '900px' }}>
+          {hearts.map((h, i) => (
+            <div key={i} style={{ width: '58px', height: '58px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <svg width="42" height="42" viewBox="0 0 24 24" style={{ transform: `scale(${h.scale})` }}>
+                <path d={heartPath} fill={h.fill} stroke={h.stroke} strokeWidth="1.5" />
+              </svg>
+            </div>
+          ))}
         </div>
 
-        {/* НИЖНИЙ ТЕКСТ */}
         <div style={{ 
-          display: 'flex', 
-          fontSize: '34px', 
-          fontWeight: 'bold', 
-          color: '#ad1457',
-          marginTop: 'auto',
-          paddingBottom: '80px'
+          display: 'flex', fontSize: '34px', fontWeight: 'bold', color: '#ad1457', 
+          marginTop: 'auto', paddingBottom: '120px' 
         }}>
           <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span> 
           <span>• {percent}% года</span>
-         </div>
+        </div>
       </div>
     ),
     { width: 1170, height: 2532 }
