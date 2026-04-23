@@ -49,7 +49,7 @@ export default function handler() {
           marginTop: 'auto', paddingBottom: '120px' 
         }}>
           <span style={{ color: '#ff1744', marginRight: '15px' }}>{left} дн. осталось</span> 
-          <span>• {percent}% года</span>
+          <span>• {percent}% года</span> 
         </div>
       </div>
     ),
